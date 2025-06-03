@@ -17,10 +17,10 @@ async function getFavouritePlaces(req, res) {
         const userId = req.query.userId;
         const favourite = await FavouritePlace.findAll({
             where: { userId },
-            include: [{ model: Place }],
+            include: [{ model: Place, as: "place" }],
         });
 
-        const favouritePlaces = favourite.map((fav) => fav.Place)
+        const favouritePlaces = favourite.map((fav) => fav.place)
         res.status(200).json(favouritePlaces);
     } catch (error) {
         console.error("Error fetching favourite places:", error);
@@ -47,7 +47,7 @@ async function addFavouritePlace(req, res) {
         res.status(201).json({
             success: true,
             message: "Favourite place added successfully",
-            data: favourite
+            data: favouritePlace
         });
     } catch (error) {
         console.error("Error adding favourite place:", error);
@@ -58,9 +58,8 @@ async function addFavouritePlace(req, res) {
 //remove a place from favourites
 async function removeFavouritePlace(req, res) {
     try {
-        const placeId = req.params.placeId;
-        const userId = req.query.userId;
-
+        const placeId = parseInt(req.params.placeId);
+        const userId = parseInt(req.query.userId);
         if (!userId || !placeId) {
             return res.status(400).json({ message: "User ID and Place ID are required" });
         }
