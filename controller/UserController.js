@@ -14,7 +14,7 @@ async function getUsers(req, res) {
 //Get user by ID
 async function getUserById(req, res) {
     try {
-        const user = await User.findOne({where: { id: req.params.id }});
+        const user = await User.findOne({ where: { id: req.params.id }, attributes: { exclude: ['password'] } });
         if (!user) {
             return res.status(404).json({ status: "Error", message: "User not found" });
         }
@@ -47,7 +47,7 @@ async function createUser(req, res) {
 //Update user by ID
 async function updateUser(req, res) {
     const { username, email, password } = req.body;
-    if (!username || !email || !password) {
+    if (!username || !email ) {
         return res.status(400).json({ status: "Error", message: "All fields are required" });
     }
 
@@ -67,7 +67,7 @@ async function updateUser(req, res) {
 
         await User.update(updateData, { where: { id: req.params.id } });
 
-        res.status(200).json({ status: "Success", message: "User updated successfully"});
+        res.status(200).json({ status: "Success", message: "User updated successfully" });
     } catch (error) {
         res.status(error.statusCode || 500).json({ status: "Error", message: error.message });
     }
