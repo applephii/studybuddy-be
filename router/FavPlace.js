@@ -8,8 +8,8 @@ import {
 
 const favPlaceRouter = express.Router();
 favPlaceRouter.get('/places', getPlaces);
-favPlaceRouter.get('/favourite-places/:userId', getFavouritePlaces);
+favPlaceRouter.get('/favourite-places', getFavouritePlaces);
 favPlaceRouter.post('/favourite-places', addFavouritePlace);
-favPlaceRouter.delete('/favourite-places', removeFavouritePlace);
+favPlaceRouter.delete('/favourite-places/:placeId', removeFavouritePlace);
 
 export default favPlaceRouter;
