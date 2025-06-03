@@ -14,7 +14,7 @@ async function getPlaces(req, res) {
 //get favourite places of a user
 async function getFavouritePlaces(req, res) {
     try {
-        const userId = req.params.userId;
+        const userId = req.query.userId;
         const favourite = await FavouritePlace.findAll({
             where: { userId },
             include: [{ model: Place }],
@@ -44,7 +44,11 @@ async function addFavouritePlace(req, res) {
         }
 
         const favouritePlace = await FavouritePlace.create({ userId, placeId });
-        res.status(201).json(favouritePlace);
+        res.status(201).json({
+            success: true,
+            message: "Favourite place added successfully",
+            data: favourite
+        });
     } catch (error) {
         console.error("Error adding favourite place:", error);
         res.status(500).json({ message: "Failed to add favourite place" });
@@ -54,7 +58,9 @@ async function addFavouritePlace(req, res) {
 //remove a place from favourites
 async function removeFavouritePlace(req, res) {
     try {
-        const { userId, placeId } = req.body;
+        const placeId = req.params.placeId;
+        const { userId } = req.body;
+
         if (!userId || !placeId) {
             return res.status(400).json({ message: "User ID and Place ID are required" });
         }
@@ -66,7 +72,10 @@ async function removeFavouritePlace(req, res) {
             return res.status(404).json({ message: "Favourite place not found" });
         }
 
-        res.status(200).json({ message: "Favourite place removed successfully" });
+        res.status(200).json({
+            success: true,
+            message: "Favourite place removed successfully"
+        });
     } catch (error) {
         console.error("Error removing favourite place:", error);
         res.status(500).json({ message: "Failed to remove favourite place" });
