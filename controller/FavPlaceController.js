@@ -59,7 +59,7 @@ async function addFavouritePlace(req, res) {
 async function removeFavouritePlace(req, res) {
     try {
         const placeId = req.params.placeId;
-        const { userId } = req.body;
+        const userId = req.query.userId;
 
         if (!userId || !placeId) {
             return res.status(400).json({ message: "User ID and Place ID are required" });
