@@ -3,7 +3,7 @@ import { Task } from '../model/Model.js';
 // read data
 async function getTasks(req, res) {
     try {
-        const userId = req.userId;
+        const userId = req.query.userId;
         const tasks = await Task.findAll({ where: { userId } });
         res.status(200).json(tasks);
     } catch (error) {
@@ -15,7 +15,7 @@ async function getTasks(req, res) {
 // create data
 async function createTask(req, res) {
     try {
-        const userId = req.userId;
+        const userId = req.query.userId;
         await Task.create({ ...req.body, userId });
 
         res.status(201).json({
@@ -32,7 +32,7 @@ async function createTask(req, res) {
 async function updateTask(req, res) {
     try {
         const id = req.params.id_task;
-        const userId = req.userId;
+        const userId = req.query.userId;
         const [updatedRows] = await Task.update(req.body, {
             where: { id, userId },
         });
@@ -53,7 +53,7 @@ async function updateTask(req, res) {
 async function deleteTask(req, res) {
     try {
         const id = req.params.id_task;
-        const userId = req.userId;
+        const userId = req.query.userId;
         const deletedRows = await Task.destroy({ where: { id, userId } });
         if (deletedRows === 0) {
             return res.status(404).json({ message: "Task not found or unauthorized" });
@@ -73,7 +73,7 @@ async function deleteTask(req, res) {
 async function getTaskById(req, res) {
     try {
         const id = req.params.id_task;
-        const userId = req.userId;
+        const userId = req.query.userId;
         const task = await Task.findOne({ where: { id, userId } });
         if (!task) {
             return res.status(404).json({ message: "Task not found or unauthorized" });
