@@ -71,13 +71,13 @@ const FavouritePlace = db.define("favourite_place", {
     userId: {
         type: Sequelize.INTEGER,
         allowNull: false,
-        references: { model: "users", key: "id" },
+        references: { model: User, key: "id" },
         onDelete: "CASCADE",
     },
     placeId: {
         type: Sequelize.INTEGER,
         allowNull: false,
-        references: { model: "places", key: "id" },
+        references: { model: Place, key: "id" },
         onDelete: "CASCADE",
     },
 });
