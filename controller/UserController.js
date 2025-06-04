@@ -1,5 +1,6 @@
 import { User } from "../model/Model.js";
 import bcrypt from "bcrypt";
+import { Op } from "sequelize";
 
 //Get all users
 async function getUsers(req, res) {
@@ -64,6 +65,28 @@ async function updateUser(req, res) {
         const user = await User.findOne({ where: { id: req.params.id } });
         if (!user) {
             return res.status(404).json({ status: "Error", message: "User not found" });
+        }
+
+        const existingUsername = await User.findOne({
+            where: {
+                username,
+                id: { [Op.ne]: req.params.id }
+            }
+        });
+
+        const existingEmail = await User.findOne({
+            where: {
+                email,
+                id: { [Op.ne]: req.params.id }
+            }
+        });
+
+        const errors = {};
+        if (existingUsername) errors.username = 'Username is already taken';
+        if (existingEmail) errors.email = 'Email is already in use';
+
+        if (Object.keys(errors).length > 0) {
+            return res.status(400).json({ errors });
         }
 
         const updateData = { username, email };
