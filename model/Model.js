@@ -97,6 +97,6 @@ FavouritePlace.belongsTo(User, { foreignKey: "userId" });
 Place.hasMany(FavouritePlace, { foreignKey: "placeId" });
 FavouritePlace.belongsTo(Place, { foreignKey: "placeId" });
 
-db.sync({ force: true }).then(() => console.log("Database is synced..."));
+db.sync().then(() => console.log("Database is synced..."));
 
 export { User, Note, Task, Place, FavouritePlace };

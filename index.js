@@ -16,7 +16,7 @@ app.use(userRouter);
 app.use(noteRouter);
 app.use(taskRouter);
 app.use(favPlaceRouter);
-app.use("/upload", express.static(path.join(__dirname, "upload")));
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 app.listen(3000, '0.0.0.0', () => {
     console.log("Server is connected...");

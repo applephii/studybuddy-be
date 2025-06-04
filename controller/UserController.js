@@ -12,22 +12,27 @@ const storage = multer.diskStorage({
         if (!fs.existsSync(upload_dir)) {
             fs.mkdirSync(upload_dir);
         }
+        cb(null, upload_dir);
+    },
+    filename: (req, file, cb) => {
+        const ext = path.extname(file.originalname);
         cb(null, req.params.id + ext);
-    }
+    },
 });
-export const upload = multer({storage});
+const upload = multer({ storage });
 
 async function UploadPhoto(req, res) {
     try {
         const userId = req.params.id;
 
-        if(!req.file) {
-            return res.status(400).json({ status: "Error", message: "No file uploaded"});
+        if (!req.file) {
+            return res.status(400).json({ status: "Error", message: "No file uploaded" });
         }
 
         const urlPict = `/uploads/${req.file.filename}`;
 
-        await User.updateUser({photo_url: urlPict}, {where: { id: req.params.id }});
+
+        await User.update({ photo_url: urlPict }, { where: { id: userId } });
         res.status(200).json({ status: "Success", message: "Photo uploaded", urlPict });
     } catch (error) {
         res.status(error.statusCode || 500).json({ status: "Error", message: error.message });
@@ -73,12 +78,13 @@ async function createUser(req, res) {
         if (Object.keys(errors).length > 0) {
             return res.status(400).json({ errors });
         }
-        
+
         const hashedPassword = await bcrypt.hash(password, 5);
         const newUser = await User.create({
             username,
             email,
             password: hashedPassword,
+            // photo_url: photo_url || null,
         });
         res.status(201).json({ status: "Success", message: "User created successfully", data: newUser });
     } catch (error) {
@@ -88,7 +94,7 @@ async function createUser(req, res) {
 
 //Update user by ID
 async function updateUser(req, res) {
-    const { username, email, password } = req.body;
+    const { username, email, password, photo_url  } = req.body;
     if (!username || !email) {
         return res.status(400).json({ status: "Error", message: "All fields are required" });
     }
@@ -124,6 +130,7 @@ async function updateUser(req, res) {
         const updateData = {};
         if (username) updateData.username = username;
         if (email) updateData.email = email;
+        if (photo_url !== undefined) updateData.photo_url = photo_url;
         if (password && password.trim() !== "") {
             const isSamePass = await bcrypt.compare(password, user.password);
             if (!isSamePass) {
@@ -205,6 +212,7 @@ export {
     deleteUser,
     loginUser,
     logoutUser,
-    UploadPhoto
+    UploadPhoto,
+    upload
 };
 
