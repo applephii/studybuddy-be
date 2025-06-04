@@ -14,6 +14,10 @@ const User = db.define("user", {
         unique: true,
     },
     password: Sequelize.STRING,
+    photo_url: {
+        type: Sequelize.STRING(255),
+        allowNull: true,
+    },
 });
 
 // Note model
@@ -93,31 +97,6 @@ FavouritePlace.belongsTo(User, { foreignKey: "userId" });
 Place.hasMany(FavouritePlace, { foreignKey: "placeId" });
 FavouritePlace.belongsTo(Place, { foreignKey: "placeId" });
 
-//photo
-const Photo = db.define("photo", {
-    url: {
-        type: Sequelize.TEXT,
-        allowNull: false,
-    },
-    uploadedAt: {
-        type: Sequelize.DATE,
-        defaultValue: Sequelize.NOW,
-    },
-    userId: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-        references: {
-            model: User,
-            key: "id",
-        },
-        onDelete: "CASCADE",
-    },
-});
+db.sync({ force: true }).then(() => console.log("Database is synced..."));
 
-User.hasMany(Photo, { foreignKey: "userId" });
-Photo.belongsTo(User, { foreignKey: "userId" });
-
-
-db.sync().then(() => console.log("Database is synced..."));
-
-export { User, Note, Task, Place, FavouritePlace, Photo };
+export { User, Note, Task, Place, FavouritePlace };

@@ -1,6 +1,38 @@
 import { User } from "../model/Model.js";
 import bcrypt from "bcrypt";
 import { Op } from "sequelize";
+import multer from "multer";
+import path from "path";
+import fs from "fs";
+
+//photo
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        const upload_dir = "./uploads";
+        if (!fs.existsSync(upload_dir)) {
+            fs.mkdirSync(upload_dir);
+        }
+        cb(null, req.params.id + ext);
+    }
+});
+export const upload = multer({storage});
+
+async function UploadPhoto(req, res) {
+    try {
+        const userId = req.params.id;
+
+        if(!req.file) {
+            return res.status(400).json({ status: "Error", message: "No file uploaded"});
+        }
+
+        const urlPict = `/uploads/${req.file.filename}`;
+
+        await User.updateUser({photo_url: urlPict}, {where: { id: req.params.id }});
+        res.status(200).json({ status: "Success", message: "Photo uploaded", urlPict });
+    } catch (error) {
+        res.status(error.statusCode || 500).json({ status: "Error", message: error.message });
+    }
+}
 
 //Get all users
 async function getUsers(req, res) {
@@ -172,5 +204,7 @@ export {
     updateUser,
     deleteUser,
     loginUser,
-    logoutUser
+    logoutUser,
+    UploadPhoto
 };
+
