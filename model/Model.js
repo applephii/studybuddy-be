@@ -120,4 +120,4 @@ Photo.belongsTo(User, { foreignKey: "userId" });
 
 db.sync().then(() => console.log("Database is synced..."));
 
-export { User, Note, Task, Place, FavouritePlace };
+export { User, Note, Task, Place, FavouritePlace, Photo };
