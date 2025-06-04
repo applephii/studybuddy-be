@@ -6,7 +6,7 @@ import { Op } from "sequelize";
 async function getUsers(req, res) {
     try {
         const users = await User.findAll();
-        res.statsus(200).json({ status: "Success", message: "Retrieved users", data: users });
+        res.status(200).json({ status: "Success", message: "Retrieved users", data: users });
     } catch (error) {
         res.status(error.statusCode || 500).json({ status: "Error", message: error.message });
     }
@@ -89,7 +89,9 @@ async function updateUser(req, res) {
             return res.status(400).json({ errors });
         }
 
-        const updateData = { username, email };
+        const updateData = {};
+        if (username) updateData.username = username;
+        if (email) updateData.email = email;
         if (password && password.trim() !== "") {
             const isSamePass = await bcrypt.compare(password, user.password);
             if (!isSamePass) {
