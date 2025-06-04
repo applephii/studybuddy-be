@@ -1,5 +1,6 @@
 import { User } from "../model/Model.js";
 import bcrypt from "bcrypt";
+import { Op } from "sequelize";
 
 //Get all users
 async function getUsers(req, res) {
