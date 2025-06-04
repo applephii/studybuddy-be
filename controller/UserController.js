@@ -1,6 +1,5 @@
 import { User } from "../model/Model.js";
 import bcrypt from "bcrypt";
-import { Op } from "sequelize";
 
 //Get all users
 async function getUsers(req, res) {
@@ -33,17 +32,15 @@ async function createUser(req, res) {
     }
 
     try {
-        const existingUser = await User.findOne({
-            where: {
-                [Op.or]: [
-                    { username },
-                    { email }
-                ]
-            }
-        });
-        if (existingUser) {
-            return res.status(409).json({ status: "Error", message: "Already exists" });
+        const existingEmail = await User.findOne({ where: { email } });
+        const existingUsername = await User.findOne({ where: { username } });
+        const errors = {};
+        if (existingEmail) errors.email = 'Email is already in use';
+        if (existingUsername) errors.username = 'Username is already taken';
+        if (Object.keys(errors).length > 0) {
+            return res.status(400).json({ errors });
         }
+        
         const hashedPassword = await bcrypt.hash(password, 5);
         const newUser = await User.create({
             username,
@@ -59,7 +56,7 @@ async function createUser(req, res) {
 //Update user by ID
 async function updateUser(req, res) {
     const { username, email, password } = req.body;
-    if (!username || !email ) {
+    if (!username || !email) {
         return res.status(400).json({ status: "Error", message: "All fields are required" });
     }
 
