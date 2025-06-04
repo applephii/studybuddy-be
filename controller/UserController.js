@@ -42,7 +42,7 @@ async function createUser(req, res) {
             }
         });
         if (existingUser) {
-            return res.status(409).json({ status: "Error", message: "Username or email already exists" });
+            return res.status(409).json({ status: "Error", message: "Already exists" });
         }
         const hashedPassword = await bcrypt.hash(password, 5);
         const newUser = await User.create({
