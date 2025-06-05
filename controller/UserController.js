@@ -33,7 +33,8 @@ async function UploadPhoto(req, res) {
 
 
         await User.update({ photo_url: urlPict }, { where: { id: userId } });
-        res.status(200).json({ status: "Success", message: "Photo uploaded", urlPict });
+
+        res.status(200).json({ status: "Success", message: "Photo uploaded", photo_url });
     } catch (error) {
         res.status(error.statusCode || 500).json({ status: "Error", message: error.message });
     }
