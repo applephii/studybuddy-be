@@ -8,7 +8,8 @@ import {
     loginUser,
     logoutUser,
     UploadPhoto,
-    upload
+    upload,
+    deletePhoto
 } from '../controller/UserController.js';
 
 const userRouter = express.Router();
