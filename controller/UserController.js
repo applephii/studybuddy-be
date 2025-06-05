@@ -39,6 +39,31 @@ async function UploadPhoto(req, res) {
     }
 }
 
+async function deletePhoto(req, res) {
+    const userId = req.params.id;
+
+    try {
+        const user = await User.findOne({ where: { id: userId } });
+        if (!user) {
+            return res.status(404).json({ status: "Error", message: "User not found" });
+        }
+
+        if (user.photo_url) {
+            const filePath = path.join('.', user.photo_url);
+            if (fs.existsSync(filePath)) {
+                fs.unlinkSync(filePath);
+            }
+        }
+
+        await User.update({ photo_url: null }, { where: { id: userId } });
+
+        res.status(200).json({ status: "Success", message: "Photo deleted successfully" });
+    } catch (error) {
+        res.status(error.statusCode || 500).json({ status: "Error", message: error.message });
+    }
+}
+
+
 //Get all users
 async function getUsers(req, res) {
     try {
@@ -213,6 +238,7 @@ export {
     loginUser,
     logoutUser,
     UploadPhoto,
-    upload
+    upload,
+    deletePhoto
 };
 

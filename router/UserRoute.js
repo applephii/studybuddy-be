@@ -21,5 +21,6 @@ userRouter.post('/login', loginUser);
 userRouter.post('/logout', logoutUser);
 
 userRouter.post("/users/:id/upload-photo", upload.single("photo"), UploadPhoto);
+router.delete('/users/:id/delete-photo', deletePhoto);
 
 export default userRouter;
