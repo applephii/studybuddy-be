@@ -22,13 +22,9 @@ app.use(favMentorRouter);
 app.use(Courserouter);
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
-// app.listen(3000, '0.0.0.0', () => {
-//     console.log("Server is connected...");
-// });
-
 const PORT = process.env.PORT || 3000;
 
-app.listen(PORT, '0.0.0.0', () => {
+app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });
 
