@@ -5,6 +5,8 @@ import noteRouter from './router/NoteRoute.js';
 import taskRouter from './router/TaskRoute.js';
 import favPlaceRouter from './router/FavPlace.js';
 import path from 'path';
+import favMentorRouter from './router/FavMentor.js';
+import Courserouter from './router/Courses.js';
 
 const app = express();
 const __dirname = path.resolve();
@@ -16,6 +18,8 @@ app.use(userRouter);
 app.use(noteRouter);
 app.use(taskRouter);
 app.use(favPlaceRouter);
+app.use(favMentorRouter);
+app.use(Courserouter);
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 // app.listen(3000, '0.0.0.0', () => {

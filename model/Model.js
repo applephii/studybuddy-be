@@ -97,6 +97,87 @@ FavouritePlace.belongsTo(User, { foreignKey: "userId" });
 Place.hasMany(FavouritePlace, { foreignKey: "placeId" });
 FavouritePlace.belongsTo(Place, { foreignKey: "placeId" });
 
+//Mentor
+const Mentor = db.define("mentor", {
+    name: {
+        type: Sequelize.STRING,
+        allowNull: false,
+    },
+    expertise: {
+        type: Sequelize.STRING,
+        allowNull: false,
+    },
+    location: {
+        type: Sequelize.STRING,
+        allowNull: false,
+    },
+    timezone: {
+        type: Sequelize.STRING,
+        allowNull: false,
+    },
+    timezoneOffset: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+    },
+    imgUrl: {
+        type: Sequelize.STRING,
+        allowNull: true,
+    },
+});
+
+// FavMentor
+const FavMentor = db.define("fav_mentor", {
+    userId: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references: { model: User, key: "id" },
+        onDelete: "CASCADE",
+    },
+    mentorId: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references: { model: Mentor, key: "id" },
+        onDelete: "CASCADE",
+    },
+});
+
+const Course = db.define("course", {
+    mentorId: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references: { model: Mentor, key: "id" },
+        onDelete: "CASCADE",
+    },
+    title: {
+        type: Sequelize.STRING,
+        allowNull: false,
+    },
+    desc: {
+        type: Sequelize.TEXT,
+        allowNull: false,
+    },
+    price: {
+        type: Sequelize.FLOAT,
+        allowNull: false,
+    },
+    status_publish: {
+        type: Sequelize.ENUM("coming soon", "published"),
+        allowNull: false,
+        defaultValue: "coming soon",
+    },
+});
+
+
+// Associations
+User.hasMany(FavMentor, { foreignKey: "userId" });
+FavMentor.belongsTo(User, { foreignKey: "userId" });
+
+Mentor.hasMany(FavMentor, { foreignKey: "mentorId" });
+FavMentor.belongsTo(Mentor, { foreignKey: "mentorId" });
+
+Mentor.hasMany(Course, { foreignKey: "mentorId" });
+Course.belongsTo(Mentor, { foreignKey: "mentorId" });
+
 db.sync().then(() => console.log("Database is synced..."));
 
-export { User, Note, Task, Place, FavouritePlace };
+export { User, Note, Task, Place, FavouritePlace, Mentor, FavMentor, Course };
